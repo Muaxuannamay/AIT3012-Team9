@@ -1,8 +1,5 @@
 # 🧠 AIT3012 - Tiền xử lý Tín Hiệu 
 
-
----
-
 ## 📋 Mục Lục
 
 - [Giới Thiệu](#-giới-thiệu)
