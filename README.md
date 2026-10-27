@@ -196,17 +196,7 @@ Các notebook **độc lập** với nhau, bạn có thể chạy theo bất k�
 | **Thời lượng** | 80 giây (đã crop từ bản ghi gốc ~22 phút) |
 | **Định dạng** | BrainVision (`.vhdr` + `.eeg` + `.vmrk`) |
 
----
 
-## 👥 Thành Viên Nhóm
-
-| STT | Họ và Tên | MSSV |
-|-----|-----------|------|
-| 1 | *(Điền tên)* | *(Điền MSSV)* |
-| 2 | *(Điền tên)* | *(Điền MSSV)* |
-| 3 | *(Điền tên)* | *(Điền MSSV)* |
-
----
 
 ## 📄 Giấy Phép
 
