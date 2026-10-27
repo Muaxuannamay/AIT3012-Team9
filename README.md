@@ -1,7 +1,6 @@
-# 🧠 AIT3012 - Xử Lý Tín Hiệu EEG Bằng Các Bộ Lọc Số (Digital Filters)
+# 🧠 AIT3012 - Tiền xử lý Tín Hiệu 
 
 > **Đồ án nhóm 9** - Môn AIT3012: Xử lý tín hiệu sinh học  
-> Thực hành thiết kế và so sánh các bộ lọc số cho tín hiệu điện não (EEG) trên dữ liệu thực nghiệm.
 
 ---
 
@@ -21,14 +20,14 @@
 
 ## 🎯 Giới Thiệu
 
-Dự án bao gồm **4 notebook** Jupyter, mỗi notebook minh họa một loại bộ lọc số phổ biến trong xử lý tín hiệu EEG:
+Dự án HIỆN TẠI bao gồm **4 notebook** Jupyter, mỗi notebook minh họa một loại bộ lọc số phổ biến trong xử lý tín hiệu EEG:
 
-| Notebook | Bộ Lọc | Mục Đích |
-|----------|--------|----------|
-| `Low-pass.ipynb` | Lọc thông thấp (Low-pass) | Loại bỏ nhiễu tần số cao, giữ lại thành phần tần số thấp |
-| `High-pass.ipynb` | Lọc thông cao (High-pass) | Loại bỏ trôi đường nền (DC drift), giữ tín hiệu tần số cao |
-| `Band-pass.ipynb` | Lọc thông dải (Band-pass) | Chỉ giữ lại dải tần số quan tâm (ví dụ: Alpha 8-13 Hz) |
-| `Notch-filter.ipynb` | Lọc chắn dải (Notch filter) | Loại bỏ nhiễu điện lưới 50/60 Hz |
+| Notebook | Bộ Lọc |
+|----------|--------|
+| `Low-pass.ipynb` | Lọc thông thấp (Low-pass) |
+| `High-pass.ipynb` | Lọc thông cao (High-pass) |
+| `Band-pass.ipynb` | Lọc thông dải (Band-pass) |
+| `Notch-filter.ipynb` | Lọc chắn dải (Notch filter) |
 
 Tất cả notebook đều sử dụng **dữ liệu EEG thực nghiệm** từ bộ dữ liệu [Nencki-Symfonia EEG/ERP (ds004621)](https://openneuro.org/datasets/ds004621) trên OpenNeuro.
 
@@ -126,12 +125,11 @@ Script sẽ:
 
 ## 🚀 Hướng Dẫn Chạy
 
-### Cách 1: Dùng Jupyter Notebook (Giao Diện Web)
+### Cách 1: Dùng Jupyter Notebook
 
 ```bash
 jupyter notebook
 ```
-Trình duyệt sẽ mở tự động. Chọn notebook cần chạy (ví dụ: `Band-pass.ipynb`) và nhấn **Run All** (hoặc `Ctrl + Shift + Enter`).
 
 ### Cách 2: Dùng JupyterLab
 
@@ -158,29 +156,86 @@ Các notebook **độc lập** với nhau, bạn có thể chạy theo bất k�
 
 ## 📓 Mô Tả Từng Notebook
 
-### 1. `Low-pass.ipynb` — Bộ Lọc Thông Thấp
+Chi tiết các bộ lọc số được thiết kế và thực nghiệm trong từng notebook, đối chiếu trực tiếp với các tiêu chuẩn xử lý tín hiệu EEG/ERP:
 
-- **Nguyên lý**: Cho phép các thành phần tần số **thấp hơn tần số cắt** đi qua, loại bỏ tần số cao.
-- **Ứng dụng**: Khử nhiễu cơ (EMG), nhiễu điện từ tần số cao.
-- **Thí nghiệm**: So sánh tín hiệu EEG trước và sau khi lọc thông thấp 40 Hz.
+### 1. `Low-pass.ipynb` — Bộ Lọc Thông Thấp (Low-pass / Anti-aliasing Filter)
 
-### 2. `High-pass.ipynb` — Bộ Lọc Thông Cao
+* **Nguyên lý & Cơ chế**: Cho phép các thành phần tần số **thấp hơn tần số cắt** đi qua và suy giảm mạnh các tần số cao hơn. Chống hiện tượng chồng phổ (*aliasing*) trước khi số hóa và loại bỏ các nhiễu tần số cao, đặc biệt là nhiễu co cơ (EMG) vốn tập trung mạnh từ 30 Hz trở lên.
+* **Tần số cắt điển hình**:
+  * `30 Hz`, `5 – 40 Hz`, `50 – 100 Hz` (cho phân tích tín hiệu EEG).
+  * `70 – 250 Hz` (cho điện não bề mặt vỏ não - ECoG).
+  * `5 – 10 kHz` (cho gai điện thế hoạt động của nơ-ron / Spike sorting).
+* **Ghi chú thực hành & Lưu ý chuyên môn**:
+  * **Mức 30 – 40 Hz**: Mức cắt phổ biến nhất cho nghiên cứu ERP và phân tích nhịp não cơ bản. Giúp loại bỏ triệt để nhiễu cơ (EMG từ 30 Hz trở lên). *Lưu ý*: Lọc ở mức này có thể làm giảm nhẹ biên độ các đỉnh nhọn sớm (như P1, N1).
+  * **Mức 50 – 100 Hz**: Khuyến nghị khi cần phân tích dải tần cao Gamma hoặc khi tín hiệu thu được có độ sạch cao.
+  * **Quy chuẩn kỹ thuật**: Bắt buộc phải sử dụng bộ lọc Anti-aliasing phần cứng trước khi số hóa tín hiệu (tuân thủ định lý lấy mẫu Nyquist). Trong xử lý phần mềm, nên dùng bộ lọc pha bằng không (*zero-phase filter*) để tránh làm sai lệch mốc thời gian của tín hiệu.
+* **Thực nghiệm trong Notebook**:
+  * Áp dụng bộ lọc FIR hai chiều không trễ pha với 2 tần số cắt: **30 Hz** (chuẩn ERP khử nhiễu cơ) và **100 Hz** (giữ dải Gamma).
+  * Khảo sát dạng sóng trên kênh trán `Fp1` ở miền thời gian và phổ mật độ công suất (PSD).
+  * Đánh giá tỷ lệ phần trăm năng lượng và biên độ bị suy giảm trên toàn bộ 127 kênh.
 
-- **Nguyên lý**: Cho phép các thành phần tần số **cao hơn tần số cắt** đi qua, loại bỏ tần số thấp (DC drift).
-- **Ứng dụng**: Loại bỏ trôi đường nền, chuẩn bị dữ liệu cho phân tích ERP.
-- **Thí nghiệm**: So sánh bộ lọc 0.1 Hz (chuẩn ERP) và 0.5 Hz (chuẩn EEG liên tục), phân tích sóng P300.
+---
 
-### 3. `Band-pass.ipynb` — Bộ Lọc Thông Dải
+### 2. `High-pass.ipynb` — Bộ Lọc Thông Cao (High-pass Filter)
 
-- **Nguyên lý**: Chỉ giữ lại dải tần số trong khoảng `[f_low, f_high]`, loại bỏ cả tần số thấp và cao ngoài dải.
-- **Ứng dụng**: Trích xuất nhịp Alpha (8-13 Hz), Beta (13-30 Hz), hoặc dải tần cụ thể.
-- **Thí nghiệm**: Tách và phân tích các băng tần não bộ quan trọng.
+* **Nguyên lý & Cơ chế**: Cho phép các thành phần tần số **cao hơn tần số cắt** đi qua và loại bỏ các thành phần tần số rất thấp. Mục đích chính là loại bỏ thành phần một chiều (DC offset), hiện tượng trôi tín hiệu tần số thấp do bộ khuếch đại điện cực (*baseline drift*), nhiễu chuyển động cơ học và nhiễu chớp mắt/EOG (xấp xỉ ~1 Hz).
+* **Tần số cắt điển hình**:
+  * `0.1 Hz`, `0.1 – 0.5 Hz` (cho phân tích ERP / P300).
+  * `0.5 Hz` (cho phân tích EEG chung, resting-state).
+  * Dưới `10 Hz` (cho điện thế trường cục bộ - LFP).
+* **Ghi chú thực hành & Lưu ý chuyên môn**:
+  * **Dùng 0.1 Hz**: Tiêu chuẩn hiện đại cho dữ liệu điện thế liên quan sự kiện (ERP như P300, N400...). Giúp bảo toàn tối đa biên độ và hình thái sóng, hạn chế tối đa hiện tượng dao động giả (*filter ringing / distortion*) do bộ lọc gây ra.
+  * **Dùng 0.5 Hz**: Phù hợp cho phân tích phổ EEG liên tục (resting-state) hoặc các hệ thống có bộ lọc phần cứng cài đặt sẵn. Tần số này triệt tiêu hiệu quả sự trôi đường nền và nhiễu mắt, nhưng có thể làm giảm nhẹ biên độ các thành phần tần số rất thấp của não bộ.
+* **Thực nghiệm trong Notebook**:
+  * So sánh đối đầu giữa bộ lọc **0.1 Hz** (chuẩn ERP hiện đại) và **0.5 Hz** (chuẩn EEG liên tục) so với dữ liệu gốc `raw_orig`.
+  * Trực quan hóa 30 giây đầu tiên trên kênh trán `Fp1` để quan sát sự ổn định của đường nền (baseline stability).
+  * Đo lường năng lượng và biên độ tiêu hao trên toàn bộ 127 kênh đo.
 
-### 4. `Notch-filter.ipynb` — Bộ Lọc Chắn Dải (Notch)
+---
 
-- **Nguyên lý**: Loại bỏ **một tần số cụ thể** (và các hài bậc cao), giữ nguyên phần còn lại.
-- **Ứng dụng**: Triệt tiêu nhiễu điện lưới 50 Hz (châu Á/châu Âu) hoặc 60 Hz (Bắc Mỹ).
-- **Thí nghiệm**: So sánh phổ PSD trước và sau khi áp dụng notch filter 50 Hz.
+### 3. `Band-pass.ipynb` — Bộ Lọc Thông Dải (Band-pass Filter)
+
+* **Nguyên lý & Cơ chế**: Chỉ cho phép dải tần số trong khoảng `[f_low, f_high]` đi qua. Bộ lọc giúp cô lập vùng tần số chứa hoạt động não liên quan trực tiếp đến tác vụ, đồng thời loại bỏ đồng thời cả nhiễu ở tần số rất thấp (trôi nền, EOG) lẫn tần số rất cao (nhiễu cơ, nhiễu tần số cao).
+* **Dải tần điển hình**:
+  * `0.5 – 40 Hz`, `1 – 50 Hz` (tiền xử lý EEG tổng quát).
+  * `8 – 12 Hz` (cô lập nhịp Mu vận động).
+  * `8 – 30 Hz` (bao gồm cả nhịp Mu và nhịp Beta cảm giác - vận động).
+* **Ghi chú thực hành & Lưu ý chuyên môn**:
+  * **Dải rộng (1 – 50 Hz)**: Tiêu chuẩn vàng cho tiền xử lý EEG tổng quát. Dải này bảo toàn hầu hết các nhịp não sinh lý (từ Delta đến Gamma thấp) trong khi loại bỏ trôi nền (< 1 Hz) và nhiễu điện lưới (50 Hz).
+  * **Dải hẹp (8 – 12 Hz; 8 – 30 Hz)**: Dùng để cô lập các nhịp vận động (Mu, Beta). Rất hiệu quả cho các bài toán Giao diện Não - Máy tính (BCI - phân loại cử động / motor imagery) và phân tích biến thiên công suất phổ (ERD/ERS).
+  * **Lưu ý quan trọng**: Việc sử dụng bộ lọc thông dải hẹp (đặc biệt khi có bậc lọc cao) sẽ gây ra hiện tượng dao động giả ở các cạnh tín hiệu (*ringing artifacts*). Do đó, **không khuyến nghị** dùng bộ lọc hẹp để đánh giá hình thái các thành phần sóng ERP.
+* **Thực nghiệm trong Notebook**:
+  * Thực hành áp dụng **Dải rộng (1 – 50 Hz)** và **Dải hẹp (8 – 30 Hz)** trên dữ liệu Oddball task.
+  * So sánh dạng sóng trên miền thời gian (chuyển đổi sang đơn vị µV) và đánh giá lượng thông tin bị loại bỏ qua tỷ lệ % năng lượng và biên độ hiệu dụng (RMS).
+
+---
+
+### 4. `Notch-filter.ipynb` — Bộ Lọc Chắn Dải / Lọc Khía (Band-stop / Notch Filter)
+
+* **Nguyên lý & Cơ chế**: Loại bỏ hoặc suy giảm cực mạnh một tần số mục tiêu cụ thể (hoặc dải hẹp xung quanh nó), giữ nguyên các tần số còn lại. Mục đích là triệt tiêu nhiễu cảm ứng từ đường dây điện nguồn xoay chiều (50/60 Hz *mains hum / line noise*) hoặc giảm nhiễu chuyển động mắt chậm (Slow EOG ở tần số 3 – 4 Hz).
+* **Dải tần chắn điển hình**:
+  * Chắn dải `48 – 52 Hz` (tại Châu Âu, Châu Á và Việt Nam dùng điện lưới 50 Hz).
+  * Chắn dải `59 – 61 Hz` (tại Bắc Mỹ dùng điện lưới 60 Hz).
+  * Chắn dải `1 – 4 Hz` (thử nghiệm giảm nhiễu Slow EOG).
+* **Ghi chú thực hành & Lưu ý chuyên môn**:
+  * **Dùng 48 – 52 Hz / 59 – 61 Hz**: Cần chọn dải chặn rộng khoảng **2 – 4 Hz** để bù đắp sự dao động trôi tần số thực tế của lưới điện. **Tuyệt đối xác định đúng vị trí địa lý nơi ghi dữ liệu** (Bắc Mỹ: 60 Hz; Châu Âu và Châu Á: 50 Hz).
+  * **Dùng 1 – 4 Hz**: Mục đích triệt tiêu nhiễu chuyển động mắt chậm (Slow EOG). Tuy nhiên, phương pháp này **rất hạn chế** vì sẽ làm mất đi sóng Delta sinh lý quan trọng. Phương pháp tối ưu hiện đại là sử dụng phân tích thành phần độc lập (**ICA**) để loại bỏ EOG mà vẫn bảo toàn nguyên vẹn tín hiệu não.
+  * **Cảnh báo dao động giả & dải Gamma**: Bộ lọc Notch có độ dốc cao rất dễ gây ra hiện tượng dao động giả và có thể vô tình cắt mất tín hiệu não thật (như dải Gamma) nằm trùng tần số với nhiễu.
+  * **Bản chất khác biệt**: Sự khác nhau giữa 50 Hz (Á/Âu) và 60 Hz (Mỹ) xuất phát từ **bản chất của hạ tầng hệ thống điện lưới**, không liên quan đến bản chất sinh lý học của não bộ hay tín hiệu sinh học như các bộ lọc khác.
+* **Thực nghiệm trong Notebook**:
+  * Dữ liệu Nencki-Symfonia ghi nhận tại Ba Lan (Châu Âu) nên sử dụng lọc Notch **48 – 52 Hz**, đồng thời so sánh đối chiếu với dải chặn **1 – 4 Hz**.
+  * Vẽ đồ thị phổ PSD trước và sau lọc để kiểm chứng đỉnh nhiễu 50 Hz bị triệt tiêu hoàn toàn.
+
+---
+
+### 📋 Bảng Tổng Hợp So Sánh Các Bộ Lọc
+
+| Lọc tần số | Tên bộ lọc | Tần số cắt điển hình | Mục đích & Cơ chế | Ghi chú thực hành & Lưu ý chuyên môn |
+|---|---|---|---|---|
+| **High-pass** | Bộ lọc thông cao | `0.1 Hz`, `0.1 - 0.5 Hz` (P300), `0.5 Hz` (EEG chung), `< 10 Hz` (LFP) | Loại bỏ thành phần một chiều (DC), hiện tượng trôi tín hiệu tần số thấp do bộ khuếch đại, nhiễu chuyển động và nhiễu chớp mắt/EOG (~1 Hz). | • **Dùng 0.1 Hz**: Tiêu chuẩn hiện đại cho ERP (P300, N400...), bảo toàn tối đa biên độ và hình thái sóng, tránh dao động giả.<br>• **Dùng 0.5 Hz**: Phù hợp cho phổ EEG liên tục, triệt tiêu trôi nền mạnh hơn nhưng có thể giảm nhẹ biên độ tần số rất thấp. |
+| **Low-pass** | Bộ lọc thông thấp / Anti-aliasing | `30 Hz`, `5 - 40 Hz`, `50 - 100 Hz` (EEG), `70 - 250 Hz` (ECoG), `5 - 10 kHz` (Spikes) | Chống hiện tượng chồng phổ trước khi số hóa và loại bỏ nhiễu tần số cao (nhiễu cơ EMG tập trung từ 30 Hz trở lên). | • **Dùng 30 - 40 Hz**: Mức phổ biến nhất cho ERP, loại bỏ triệt để nhiễu cơ (EMG ≥ 30 Hz), có thể làm giảm nhẹ biên độ đỉnh nhọn (P1, N1).<br>• **Dùng 50 - 100 Hz**: Khuyến nghị khi cần phân tích dải Gamma.<br>• Bắt buộc dùng Anti-aliasing phần cứng trước số hóa; dùng bộ lọc pha bằng 0 trong phần mềm. |
+| **Band-pass** | Bộ lọc thông dải | `0.5 - 40 Hz`, `1 - 50 Hz` (EEG tổng quát), `8 - 12 Hz` (nhịp Mu), `8 - 30 Hz` (Mu & Beta) | Cô lập vùng tần số chứa hoạt động não liên quan đến tác vụ và loại bỏ đồng thời nhiễu ở tần số rất thấp lẫn rất cao. | • **Dải rộng (1 - 50 Hz)**: Tiêu chuẩn tiền xử lý EEG tổng quát, bảo toàn hầu hết nhịp sinh lý và loại trôi nền + nhiễu 50 Hz.<br>• **Dải hẹp (8 - 12 Hz / 8 - 30 Hz)**: Hiệu quả cho BCI phân loại chuyển động và phân tích công suất.<br>• Tránh dùng bộ lọc dải hẹp bậc cao để đánh giá hình thái thành phần ERP do gây dao động giả. |
+| **Band-stop / Notch** | Bộ lọc chắn dải / Lọc khía | `48 - 52 Hz` (Châu Á, Châu Âu: 50 Hz), `59 - 61 Hz` (Mỹ: 60 Hz), hoặc `1 - 4 Hz` | Triệt tiêu nhiễu nguồn xoay chiều 50/60 Hz line noise hoặc giảm nhiễu chuyển động mắt EOG ở 3 - 4 Hz. | • **Dùng 48 - 52 Hz / 59 - 61 Hz**: Cần dải chặn rộng 2 - 4 Hz bù trôi tần số; xác định đúng vị trí địa lý ghi dữ liệu.<br>• **Dùng 1 - 4 Hz**: Hạn chế vì làm mất sóng Delta sinh lý (nên dùng ICA thay thế).<br>• Bộ lọc dốc dễ gây dao động giả và cắt mất dải Gamma trùng tần số.<br>• Phụ thuộc bản chất hệ thống điện thay vì bản chất não bộ. |
 
 ---
 
