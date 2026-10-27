@@ -1,6 +1,5 @@
 # 🧠 AIT3012 - Tiền xử lý Tín Hiệu 
 
-> **Đồ án nhóm 9** - Môn AIT3012: Xử lý tín hiệu sinh học  
 
 ---
 
